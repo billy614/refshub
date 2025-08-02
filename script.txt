@@ -1,0 +1,55 @@
+public class ModMenu : MonoBehaviour
+{
+    public GameObject gunPrefab;
+    public Transform player;
+    public Transform gunSpawnPoint;
+
+    private bool isInvisible = false;
+    private bool isFlying = false;
+
+    void Start()
+    {
+        if (player == null)
+            player = GameObject.FindWithTag("Player").transform;
+    }
+
+    public void SpawnGun()
+    {
+        Instantiate(gunPrefab, gunSpawnPoint.position, gunSpawnPoint.rotation);
+        Debug.Log("Gun spawned!");
+    }
+
+    public void ToggleInvisibility()
+    {
+        isInvisible = !isInvisible;
+        Renderer[] renderers = player.GetComponentsInChildren<Renderer>();
+        foreach (var r in renderers)
+        {
+            r.enabled = !isInvisible;
+        }
+        Debug.Log("Invisibility toggled: " + isInvisible);
+    }
+
+    public void ToggleFlyMode()
+    {
+        isFlying = !isFlying;
+        Rigidbody rb = player.GetComponent<Rigidbody>();
+        if (isFlying)
+        {
+            rb.useGravity = false;
+            rb.velocity = Vector3.up * 5f;
+        }
+        else
+        {
+            rb.useGravity = true;
+        }
+
+        Debug.Log("Fly mode: " + isFlying);
+    }
+
+    public void TeleportToPoint(Transform target)
+    {
+        player.position = target.position;
+        Debug.Log("Teleported!");
+    }
+}
